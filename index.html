@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一个集合了各种学习资源的网站，包括在线课程、电子书、学习工具、题库和时间管理工具。">
+    <meta name="keywords" content="学习资源, 在线课程, 电子书, 学习工具, 题库, 时间管理">
+    <title>学习资源集合</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 20px;
+        }
+        .category {
+            margin-bottom: 20px;
+        }
+        .category h2 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin: 0;
+        }
+        .resource-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .resource-list li {
+            background-color: white;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .resource-list li a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .resource-list li a:hover {
+            text-decoration: underline;
+        }
+        .search-bar {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-bar input {
+            padding: 10px;
+            width: 300px;
+            max-width: 100%;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+        .feedback-form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+        .feedback-form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .feedback-form input, .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+        .feedback-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .feedback-form button:hover {
+            background-color: #45a049;
+        }
+        .social-share {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .social-share a {
+            margin: 0 10px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .social-share a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            bottom: 0;
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 5px 0;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>学习资源集合</h1>
+</header>
+
+<nav>
+    <a href="#online-courses">在线课程</a>
+    <a href="#ebooks">电子书和文献</a>
+    <a href="#tools">学习工具</a>
+    <a href="#quizzes">题库和练习</a>
+    <a href="#time-management">时间管理工具</a>
+</nav>
+
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="搜索资源...">
+    <button onclick="searchResources()">搜索</button>
+</div>
+
+<div class="container">
+    <div id="online-courses" class="category">
+        <h2>在线课程</h2>
+        <ul class="resource-list">
+            <li><a href="https://www.coursera.org/" target="_blank">Coursera</a></li>
+            <li><a href="https://www.edx.org/" target="_blank">edX</a></li>
+            <li><a href="https://www.khanacademy.org/" target="_blank">Khan Academy</a></li>
+            <li><a href="https://www.udemy.com/" target="_blank">Udemy</a></li>
+        </ul>
+    </div>
+
+    <div id="ebooks" class="category">
+        <h2>电子书和文献</h2>
+        <ul class="resource-list">
+            <li><a href="https://scholar.google.com/" target="_blank">Google Scholar</a></li>
+            <li><a href="https://www.gutenberg.org/" target="_blank">Project Gutenberg</a></li>
+            <li><a href="http://libgen.rs/" target="_blank">Libgen</a></li>
+        </ul>
+    </div>
+
+    <div id="tools" class="category">
+        <h2>学习工具</h2>
+        <ul class="resource-list">
+            <li><a href="https://quizlet.com/" target="_blank">Quizlet</a></li>
+            <li><a href="https://apps.ankiweb.net/" target="_blank">Anki</a></li>
+            <li><a href="https://evernote.com/" target="_blank">Evernote</a></li>
+            <li><a href="https://www.notion.so/" target="_blank">Notion</a></li>
+        </ul>
+    </div>
+
+    <div id="quizzes" class="category">
+        <h2>题库和练习</h2>
+        <ul class="resource-list">
+            <li><a href="https://www.khanacademy.org/" target="_blank">Khan Academy</a></li>
+            <li><a href="https://quizizz.com/" target="_blank">Quizizz</a></li>
+            <li><a href="https://www.proprofs.com/" target="_blank">ProProfs</a></li>
+        </ul>
+    </div>
+
+    <div id="time-management" class="category">
+        <h2>时间管理工具</h2>
+        <ul class="resource-list">
+            <li><a href="https://trello.com/" target="_blank">Trello</a></li>
+            <li><a href="https://todoist.com/" target="_blank">Todoist</a></li>
+            <li><a href="https://pomodoneapp.com/" target="_blank">Pomodone</a></li>
+        </ul>
+    </div>
+
+    <div class="feedback-form">
+        <h2>反馈</h2>
+        <form action="/submit-feedback" method="post">
+            <label for="name">姓名:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">邮箱:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">消息:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">提交</button>
+        </form>
+    </div>
+
+    <div class="social-share">
+        <h2>分享</h2>
+        <a href="https://twitter.com/share?url=YOUR_URL&text=Check out this learning resource!" target="_blank">Twitter</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL" target="_blank">Facebook</a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=YOUR_URL&title=Learning Resources" target="_blank">LinkedIn</a>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2023 学习资源集合. 保留所有权利.</p>
+</footer>
+
+<script>
+    function searchResources() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var resources = document.querySelectorAll('.resource-list li');
+        resources.forEach(function(resource) {
+            var text = resource.textContent.toLowerCase();
+            if (text.includes(input)) {
+                resource.style.display = '';
+            } else {
+                resource.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
