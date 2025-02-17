@@ -1,249 +1,508 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CCN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="一个集合了各种学习资源的网站，包括在线课程、电子书、学习工具、题库和时间管理工具。">
-    <meta name="keywords" content="学习资源, 在线课程, 电子书, 学习工具, 题库, 时间管理">
+    <meta name="description" content="一个集合了各种学习资源的网站，包括在线课程、电子书、学习工具和作者简介。">
+    <meta name="keywords" content="学习资源, 在线课程, 电子书, 学习工具, 作者简介">
     <title>学习资源集合</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.css">
     <style>
+        /* 全局样式 */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            color: #ffffff; 
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0;
+            left: 0;
         }
         header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 0;
+            background-color: rgba(11, 12, 16, 0.8);
+            color: #66FCF1; 
             text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #66FCF1; /* 添加底部边框 */
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            animation: fadeInDown 2s;
         }
         nav {
-            background-color: #333;
+            background: rgba(31, 40, 51, 0.9);
             color: white;
-            padding: 10px;
             text-align: center;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 添加阴影 */
         }
         nav a {
-            color: white;
+            color: #C5C6C7;
             margin: 0 15px;
             text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease-in-out, transform 0.3s; /* 添加缩放效果 */
         }
         nav a:hover {
+            color: #66FCF1;
             text-decoration: underline;
+            transform: scale(1.1);
         }
         .container {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1200px; /* 限制最大宽度 */
+            margin: auto; /* 居中 */
         }
         .category {
-            margin-bottom: 20px;
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 30px;
+            background: rgba(31, 40, 51, 0.8);
+            border-radius: 8px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s; /* 添加缩放效果 */
+        }
+        .category:hover {
+            transform: scale(1.02); /* 悬停时放大 */
         }
         .category h2 {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
+            background-color: #0B0C10;
+            color: #66FCF1;
+            padding: 15px;
             margin: 0;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.8rem;
         }
         .resource-list {
             list-style-type: none;
-            padding: 0;
+            padding: 15px;
+            margin: 0;
         }
         .resource-list li {
-            background-color: white;
-            margin: 5px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
+            background-color: #1F2833;
+            margin: 8px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s, background-color 0.5s;
         }
-        .resource-list li a {
-            color: #4CAF50;
+        .resource-list li:hover {
+            background-color: #66FCF1;
+            transform: translateY(-5px);
+        }
+        .resource-list a {
+            color: #e6e7ec;
             text-decoration: none;
+            font-weight: bold;
         }
-        .resource-list li a:hover {
+        .resource-list a:hover {
+            color: #1F2833;
             text-decoration: underline;
         }
-        .search-bar {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .search-bar input {
-            padding: 10px;
-            width: 300px;
-            max-width: 100%;
-        }
-        .search-bar button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .search-bar button:hover {
-            background-color: #45a049;
-        }
-        .feedback-form {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-        }
-        .feedback-form label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        .feedback-form input, .feedback-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-        }
-        .feedback-form button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .feedback-form button:hover {
-            background-color: #45a049;
-        }
-        .social-share {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .social-share a {
-            margin: 0 10px;
-            color: #4CAF50;
-            text-decoration: none;
-        }
-        .social-share a:hover {
-            text-decoration: underline;
+        .comment-section {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(31, 40, 51, 0.9); /* 更深的背景色 */
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
         }
         footer {
-            background-color: #333;
-            color: white;
+            background-color: rgba(11, 12, 16, 0.8);
+            color: #C5C6C7;
             text-align: center;
-            padding: 10px 0;
-            width: 100%;
-            bottom: 0;
+            padding: 15px 0;
+            font-size: 1.1rem;
+            border-top: 2px solid #66FCF1; /* 添加顶部边框 */
         }
+        /* 动画 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* 媒体查询 */
         @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
             nav a {
-                display: block;
-                margin: 5px 0;
+                margin: 0 10px;
+                font-size: 1rem;
+            }
+            .category h2 {
+                font-size: 1.6rem;
             }
             .container {
                 padding: 10px;
             }
         }
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            nav a {
+                font-size: 0.9rem;
+            }
+            .category h2 {
+                font-size: 1.4rem;
+            }
+        }
+        /* 模态框的样式 */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定位置 */
+            z-index: 1000; /* 层级 */
+            left: 0;
+            top: 0;
+            width: 100%; /* 全屏宽 */
+            height: 100%; /* 全屏高 */
+            overflow: auto; /* 启用滚动条 */
+            background-color: rgba(0, 0, 0, 0.5); /* 背景颜色调整为适中透明度 */
+        }
+        .modal-content {
+            background-color: #ffffff; /* 使用白色背景 */
+            margin: 15% auto; /* 上下居中，左右自动 */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* 宽度 */
+            max-width: 500px; /* 最大宽度 */
+            border-radius: 8px; /* 圆角 */
+            color: #000000; /* 确保文本颜色为黑色 */
+        }
+        .modal-content h2 {
+            color: #000000; /* 使用黑色文字 */
+            text-align: center; /* 标题居中 */
+            font-size: 1.8rem; /* 设置标题字体大小 */
+            margin: 0; /* 清除默认边距 */
+            padding-bottom: 10px; /* 添加底部间距 */
+            border-bottom: 2px solid #66FCF1; /* 底部边框 */
+        }
+        .modal-content p {
+            color: #000000; /* 设置段落文本为黑色 */
+            font-size: 1rem; /* 设置段落文本大小 */
+            margin: 10px 0; /* 添加上下边距 */
+        }
+        /* 关闭按钮样式 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div id="particles-js"></div>
+    <header>
+        <h1>学习资源集合</h1>
+    </header>
 
-<header>
-    <h1>学习资源集合</h1>
-</header>
+    <nav>
+        <a href="#ai-tools">AI工具</a>
+        <a href="#online-courses">在线课程</a>
+        <a href="#ebooks">电子书和文献</a>
+        <a href="#tools">学习工具</a>
+        <a href="#school">学校</a> <!-- 添加学校模块链接 -->
+        <a href="author.html">作者简介</a> <!-- 更新为指向作者简介页面 -->
+    </nav>
 
-<nav>
-    <a href="#online-courses">在线课程</a>
-    <a href="#ebooks">电子书和文献</a>
-    <a href="#tools">学习工具</a>
-    <a href="#quizzes">题库和练习</a>
-    <a href="#time-management">时间管理工具</a>
-</nav>
+    <div class="container">
+        <div id="ai-tools" class="category">
+            <h2>AI快捷网址</h2>
+            <ul class="resource-list">
+                <li><a href="https://kimi.moonshot.cn/" target="_blank">Kimi</a></li>
+                <li><a href="https://www.doubao.com/chat/" target="_blank">豆包</a></li>
+                <li><a href="https://hailuoai.com/" target="_blank">海螺AI</a></li>
+                <li><a href="https://ai.rcouyi.com/home" target="_blank">阿水AI 6.0（需要付费使用，强力推荐）</a></li>
+                <li><a href="https://ai8.rcouyi.com/auth?type=register&invite=MzY5Mw" target="_blank">阿水AI 8.0</a></li>
+                <li><a href="https://www.9e.lv/list/" target="_blank">免费ChatGPT</a></li>
+                <li><a href="https://share.claude.best" target="_blank">免费Claude（多模态）</a></li>
+            </ul>
+        </div>
 
-<div class="search-bar">
-    <input type="text" id="searchInput" placeholder="搜索资源...">
-    <button onclick="searchResources()">搜索</button>
-</div>
+        <div id="online-courses" class="category">
+            <h2>在线课程</h2>
+            <ul class="resource-list">
+                <li><a href="https://www.bilibili.com/" target="_blank">哔哩哔哩</a> - 提供丰富的学习视频</li>
+                <li><a href="https://www.icourse163.org/" target="_blank">网易云课堂</a> - 多种课程资源</li>
+                <li><a href="https://www.mooc.cn/" target="_blank">中国大学MOOC</a> - 大学课程平台</li>
+                <li><a href="https://study.163.com/" target="_blank">网易公开课</a> - 免费学习资源</li>
+            </ul>
+        </div>
 
-<div class="container">
-    <div id="online-courses" class="category">
-        <h2>在线课程</h2>
-        <ul class="resource-list">
-            <li><a href="https://www.coursera.org/" target="_blank">Coursera</a></li>
-            <li><a href="https://www.edx.org/" target="_blank">edX</a></li>
-            <li><a href="https://www.khanacademy.org/" target="_blank">Khan Academy</a></li>
-            <li><a href="https://www.udemy.com/" target="_blank">Udemy</a></li>
-        </ul>
+        <div id="ebooks" class="category">
+            <h2>电子书和文献</h2>
+            <ul class="resource-list">
+                <li><a href="https://www.baidu.com/s?wd=电子书" target="_blank">百度文库</a></li>
+                <li><a href="https://book.douban.com/" target="_blank">豆瓣读书</a></li>
+                <li><a href="https://www.jiumodiary.com/" target="_blank">鸠摩搜索</a></li>
+                <li><a href="http://www.51yuedu.com/" target="_blank">51阅读</a></li>
+            </ul>
+        </div>
+
+        <div id="tools" class="category">
+            <h2>学习工具</h2>
+            <ul class="resource-list">
+                <li><a href="https://www.typora.io/" target="_blank">Typora</a> - Markdown 编辑器</li>
+                <li><a href="https://www.xmind.cn/" target="_blank">XMind</a> - 思维导图工具</li>
+                <li><a href="https://www.processon.com/" target="_blank">ProcessOn</a> - 在线画图工具</li>
+                <li><a href="https://www.notion.so/" target="_blank">Notion</a> - 笔记和项目管理</li>
+                <li><a href="https://www.wps.cn/" target="_blank">WPS Office</a> - 办公软件</li>
+            </ul>
+        </div>
+
+        <div id="school" class="category">
+            <h2>学校</h2>
+            <ul class="resource-list">
+                <li><a href="https://www.yuketang.cn/v2/web/index" target="_blank">雨课堂</a></li>
+                <li><a href="https://i.chaoxing.com/base?t=1726861509099" target="_blank">学习通</a></li>
+                <li><a href="https://www.educoder.net/" target="_blank">头歌</a></li>
+            </ul>
+        </div>
+
+        <div class="comment-section">
+            <h2>用户评论</h2>
+            <div>
+                <textarea id="commentInput" placeholder="留下您的评论..." rows="4" style="width: 100%; border-radius: 5px; padding: 10px;"></textarea>
+                <button onclick="submitComment()" style="margin-top: 10px; padding: 10px 15px; border: none; border-radius: 5px; background-color: #66FCF1; color: #000; cursor: pointer;">提交评论</button>
+            </div>
+            <div id="comments" style="margin-top: 15px;"></div> <!-- 评论显示区域 -->
+        </div>
     </div>
 
-    <div id="ebooks" class="category">
-        <h2>电子书和文献</h2>
-        <ul class="resource-list">
-            <li><a href="https://scholar.google.com/" target="_blank">Google Scholar</a></li>
-            <li><a href="https://www.gutenberg.org/" target="_blank">Project Gutenberg</a></li>
-            <li><a href="http://libgen.rs/" target="_blank">Libgen</a></li>
-        </ul>
-    </div>
+    <footer>
+        <p>&copy; 2023 学习资源集合. 所有权利保留.</p>
+    </footer>
 
-    <div id="tools" class="category">
-        <h2>学习工具</h2>
-        <ul class="resource-list">
-            <li><a href="https://quizlet.com/" target="_blank">Quizlet</a></li>
-            <li><a href="https://apps.ankiweb.net/" target="_blank">Anki</a></li>
-            <li><a href="https://evernote.com/" target="_blank">Evernote</a></li>
-            <li><a href="https://www.notion.so/" target="_blank">Notion</a></li>
-        </ul>
-    </div>
-
-    <div id="quizzes" class="category">
-        <h2>题库和练习</h2>
-        <ul class="resource-list">
-            <li><a href="https://www.khanacademy.org/" target="_blank">Khan Academy</a></li>
-            <li><a href="https://quizizz.com/" target="_blank">Quizizz</a></li>
-            <li><a href="https://www.proprofs.com/" target="_blank">ProProfs</a></li>
-        </ul>
-    </div>
-
-    <div id="time-management" class="category">
-        <h2>时间管理工具</h2>
-        <ul class="resource-list">
-            <li><a href="https://trello.com/" target="_blank">Trello</a></li>
-            <li><a href="https://todoist.com/" target="_blank">Todoist</a></li>
-            <li><a href="https://pomodoneapp.com/" target="_blank">Pomodone</a></li>
-        </ul>
-    </div>
-
-    <div class="feedback-form">
-        <h2>反馈</h2>
-        <form action="/submit-feedback" method="post">
-            <label for="name">姓名:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">邮箱:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="message">消息:</label>
-            <textarea id="message" name="message" required></textarea>
-            <button type="submit">提交</button>
-        </form>
-    </div>
-
-    <div class="social-share">
-        <h2>分享</h2>
-        <a href="https://twitter.com/share?url=YOUR_URL&text=Check out this learning resource!" target="_blank">Twitter</a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL" target="_blank">Facebook</a>
-        <a href="https://www.linkedin.com/shareArticle?mini=true&url=YOUR_URL&title=Learning Resources" target="_blank">LinkedIn</a>
-    </div>
-</div>
-
-<footer>
-    <p>&copy; 2023 学习资源集合. 保留所有权利.</p>
-</footer>
-
-<script>
-    function searchResources() {
-        var input = document.getElementById('searchInput').value.toLowerCase();
-        var resources = document.querySelectorAll('.resource-list li');
-        resources.forEach(function(resource) {
-            var text = resource.textContent.toLowerCase();
-            if (text.includes(input)) {
-                resource.style.display = '';
-            } else {
-                resource.style.display = 'none';
-            }
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // 确保 particles.js 在 DOM 加载完成后初始化，避免找不到元素
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#66FCF1" // 设置粒子颜色为炫酷的颜色
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 4,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#66FCF1",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 400,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
         });
-    }
-</script>
 
+        // 加载模态框
+        window.onload = function() {
+            loadComments(); // 加载评论
+            document.getElementById('welcomeModal').style.display = 'block'; // 显示模态框
+        };
+
+        // 关闭模态框函数
+        function closeModal() {
+            document.getElementById('welcomeModal').style.display = 'none'; // 隐藏模态框
+        }
+
+        // 当用户点击模态框外部，关闭模态框
+        window.onclick = function(event) {
+            let modal = document.getElementById('welcomeModal');
+            if (event.target === modal) {
+                closeModal(); // 隐藏模态框
+            }
+        };
+
+        // 提交评论函数
+        const deletePassword = "520"; // 设置删除评论的密码
+
+        function submitComment() {
+            let commentInput = document.getElementById('commentInput');
+            let commentText = commentInput.value.trim();
+            if (commentText) {
+                let comments = getCommentsFromLocalStorage(); // 获取现有评论
+                let timestamp = new Date().toLocaleString(); // 获取当前时间
+                comments.push({ text: commentText, time: timestamp }); // 添加新评论和时间戳
+                localStorage.setItem('comments', JSON.stringify(comments)); // 保存评论到本地存储
+                commentInput.value = ''; // 清空输入框
+                loadComments(); // 重新加载评论
+            } else {
+                alert("评论不能为空！");
+            }
+        }
+
+        // 从本地存储获取评论
+        function getCommentsFromLocalStorage() {
+            let comments = localStorage.getItem('comments');
+            return comments ? JSON.parse(comments) : []; // 返回已存储的评论或空数组
+        }
+
+        // 加载评论并显示
+        function loadComments() {
+            let commentsDiv = document.getElementById('comments');
+            commentsDiv.innerHTML = ''; // 清空当前评论显示区域
+            let comments = getCommentsFromLocalStorage(); // 获取评论
+            comments.forEach((comment, index) => {
+                let newComment = document.createElement('div');
+                newComment.textContent = `${comment.text} (发表于: ${comment.time})`; // 显示评论和时间戳
+                
+                // 创建删除按钮
+                let deleteButton = document.createElement('button');
+                deleteButton.textContent = '删除';
+                deleteButton.onclick = function() {
+                    let password = prompt("请输入删除评论的密码："); // 输入密码
+                    if (password === deletePassword) {
+                        deleteComment(index); // 如果密码正确，删除评论
+                    } else {
+                        alert("密码错误！");
+                    }
+                };
+                
+                newComment.appendChild(deleteButton); // 将删除按钮添加到评论
+                newComment.style.backgroundColor = "#1F2833";
+                newComment.style.padding = "10px";
+                newComment.style.margin = "5px 0";
+                newComment.style.borderRadius = "5px";
+                commentsDiv.appendChild(newComment);
+            });
+        }
+
+        // 删除评论函数
+        function deleteComment(index) {
+            let comments = getCommentsFromLocalStorage(); // 获取现有评论
+            comments.splice(index, 1); // 删除指定索引的评论
+            localStorage.setItem('comments', JSON.stringify(comments)); // 更新本地存储
+            loadComments(); // 重新加载评论
+        }
+    </script>
+    <!-- 模态框 -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>欢迎来到学习资源集合网站！</h2>
+            <p>这里汇集了丰富的学习资源，包括在线课程、AI工具、电子书、学习工具等。希望您能找到您需要的内容！本网站只是收集网站作用，不承担任何法律责任！</p>
+        </div>
+    </div>
 </body>
 </html>
