@@ -187,3 +187,11 @@ function deleteComment(index) {
     localStorage.setItem('comments', JSON.stringify(comments)); // 更新本地存储
     loadComments(); // 重新加载评论
 }
+document.querySelectorAll('.resource-list li').forEach(item => {
+    item.addEventListener('click', () => {
+        const link = item.querySelector('a');
+        if (link) {
+            window.location.href = link.href; // 跳转到链接地址
+        }
+    });
+});
