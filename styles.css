@@ -211,17 +211,18 @@ footer {
     cursor: pointer;
 }
 /* 搜索框容器 */
+/* 搜索框 */
 .search-container {
     display: flex;
     justify-content: center; /* 水平居中 */
     align-items: center; /* 垂直居中 */
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto; /* 上下间距，并居中 */
+    margin: 20px auto; /* 上下边距 20px，左右自动居中 */
+    width: 80%; /* 设置宽度为80% */
+    max-width: 800px; /* 最大宽度 */
 }
 
 #searchInput {
-    width: 70%;
+    width: 70%; /* 输入框宽度占容器的70% */
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
@@ -229,11 +230,10 @@ footer {
     border-radius: 4px 0 0 4px;
     background-color: rgba(31, 40, 51, 0.8);
     color: white;
-    font-size: 1rem; /* 调整字体大小 */
 }
 
 #searchButton {
-    width: 30%;
+    width: 30%; /* 按钮宽度占容器的30% */
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
@@ -242,31 +242,8 @@ footer {
     background-color: #66FCF1;
     color: black;
     cursor: pointer;
-    font-size: 1rem; /* 调整字体大小 */
 }
 
 #searchButton:hover {
     background-color: #4CAF50;
-}
-
-/* 确保导航栏和搜索框之间有适当的间距 */
-nav {
-    background: rgba(31, 40, 51, 0.9);
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 添加阴影 */
-}
-
-/* 确保内容区域在搜索框下方正确显示 */
-.container {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 1200px; /* 限制最大宽度 */
-    margin: auto; /* 居中 */
 }
