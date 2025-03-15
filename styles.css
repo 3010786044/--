@@ -210,14 +210,14 @@ footer {
     text-decoration: none;
     cursor: pointer;
 }
-/* 搜索框 */
+/* 搜索框容器 */
 .search-container {
     display: flex;
     justify-content: center; /* 水平居中 */
     align-items: center; /* 垂直居中 */
-    margin: 20px 0;
     width: 100%;
     max-width: 800px;
+    margin: 20px auto; /* 上下间距，并居中 */
 }
 
 #searchInput {
@@ -229,6 +229,7 @@ footer {
     border-radius: 4px 0 0 4px;
     background-color: rgba(31, 40, 51, 0.8);
     color: white;
+    font-size: 1rem; /* 调整字体大小 */
 }
 
 #searchButton {
@@ -241,8 +242,31 @@ footer {
     background-color: #66FCF1;
     color: black;
     cursor: pointer;
+    font-size: 1rem; /* 调整字体大小 */
 }
 
 #searchButton:hover {
     background-color: #4CAF50;
+}
+
+/* 确保导航栏和搜索框之间有适当的间距 */
+nav {
+    background: rgba(31, 40, 51, 0.9);
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 添加阴影 */
+}
+
+/* 确保内容区域在搜索框下方正确显示 */
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px; /* 限制最大宽度 */
+    margin: auto; /* 居中 */
 }
