@@ -213,7 +213,8 @@ footer {
 /* 搜索框 */
 .search-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
     margin: 20px 0;
     width: 100%;
     max-width: 800px;
