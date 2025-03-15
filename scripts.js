@@ -195,3 +195,21 @@ document.querySelectorAll('.resource-list li').forEach(item => {
         }
     });
 });
+// 搜索功能
+document.getElementById('searchButton').addEventListener('click', function() {
+    performSearch();
+});
+
+document.getElementById('searchInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+});
+
+function performSearch() {
+    const searchInput = document.getElementById('searchInput').value;
+    if (searchInput.trim() !== '') {
+        // 使用百度接口进行搜索
+        window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(searchInput));
+    }
+}
