@@ -193,29 +193,24 @@ function deleteComment(index) {
     localStorage.setItem('comments', JSON.stringify(comments)); // 更新本地存储
     loadComments(); // 重新加载评论
 }
+
+// 修改链接点击处理代码
 document.querySelectorAll('.resource-list li').forEach(item => {
     item.addEventListener('click', () => {
         const link = item.querySelector('a');
         if (link) {
-            window.location.href = link.href; // 跳转到链接地址
+            // 在新窗口打开链接
+            window.open(link.href, '_blank'); // 修改这里，使用 window.open
+            return false; // 阻止默认行为
         }
     });
 });
-// 搜索功能
-document.getElementById('searchButton').addEventListener('click', function() {
-    performSearch();
-});
 
-document.getElementById('searchInput').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        performSearch();
-    }
-});
-
+// 修改搜索功能，也在新窗口打开
 function performSearch() {
     const searchInput = document.getElementById('searchInput').value;
     if (searchInput.trim() !== '') {
-        // 使用百度接口进行搜索
-        window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(searchInput));
+        // 使用百度接口进行搜索，在新窗口打开
+        window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(searchInput), '_blank');
     }
 }
