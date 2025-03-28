@@ -117,6 +117,12 @@ window.onload = function() {
         closeModal(); // 关闭模态框
         document.getElementById('searchInput').focus(); // 将焦点设置到搜索框
     };
+
+    // 2秒后自动关闭模态框
+    setTimeout(function() {
+        closeModal(); // 关闭模态框
+        document.getElementById('searchInput').focus(); // 将焦点设置到搜索框
+    }, 2000); // 2000毫秒 = 2秒
 };
 
 // 关闭模态框函数
