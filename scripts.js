@@ -107,22 +107,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 加载模态框
+// 加载侧边栏
 window.onload = function() {
     loadComments(); // 加载评论
-    document.getElementById('welcomeModal').style.display = 'block'; // 显示模态框
+    document.getElementById('welcomeSidebar').classList.add('active'); // 显示侧边栏
 };
 
-// 关闭模态框函数
-function closeModal() {
-    document.getElementById('welcomeModal').style.display = 'none'; // 隐藏模态框
+// 关闭侧边栏函数
+function closeSidebar() {
+    document.getElementById('welcomeSidebar').classList.remove('active'); // 隐藏侧边栏
 }
 
-// 当用户点击模态框外部，关闭模态框
+// 当用户点击侧边栏外部，关闭侧边栏
 window.onclick = function(event) {
-    let modal = document.getElementById('welcomeModal');
-    if (event.target === modal) {
-        closeModal(); // 隐藏模态框
+    let sidebar = document.getElementById('welcomeSidebar');
+    if (!sidebar.contains(event.target)) {
+        closeSidebar();
     }
 };
 
