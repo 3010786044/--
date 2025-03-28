@@ -111,6 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
 window.onload = function() {
     loadComments(); // 加载评论
     document.getElementById('welcomeModal').style.display = 'block'; // 显示模态框
+
+    // 为开始搜索按钮添加点击事件
+    document.getElementById('focusSearchButton').onclick = function() {
+        closeModal(); // 关闭模态框
+        document.getElementById('searchInput').focus(); // 将焦点设置到搜索框
+    };
 };
 
 // 关闭模态框函数
