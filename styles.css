@@ -255,34 +255,33 @@ footer {
     display: none; /* 默认隐藏 */
     position: fixed; /* 固定位置 */
     z-index: 1000; /* 层级 */
-    left: 0;
-    top: 0;
-    width: 100%; /* 全屏宽 */
-    height: 100%; /* 全屏高 */
+    left: 20px; /* 左上角，距离左边20px */
+    top: 150px; /* 距离顶部150px，与搜索框平齐 */
+    width: 250px; /* 宽度调整为250px */
+    height: auto; /* 高度自适应 */
     overflow: auto; /* 启用滚动条 */
-    background-color: rgba(0, 0, 0, 0.5); /* 背景颜色调整为适中透明度 */
-}
-.modal-content {
-    background-color: #ffffff; /* 使用白色背景 */
-    margin: 15% auto; /* 上下居中，左右自动 */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* 宽度 */
-    max-width: 500px; /* 最大宽度 */
+    background-color: rgba(255, 255, 255, 0.95); /* 背景颜色调整为适中透明度 */
     border-radius: 8px; /* 圆角 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 添加阴影 */
+    padding: 15px; /* 内边距 */
+}
+
+.modal-content {
     color: #000000; /* 确保文本颜色为黑色 */
 }
+
 .modal-content h2 {
-    color: #000000; /* 使用黑色文字 */
-    text-align: center; /* 标题居中 */
-    font-size: 1.8rem; /* 设置标题字体大小 */
+    color: #66FCF1; /* 使用主色调 */
+    text-align: left; /* 标题左对齐 */
+    font-size: 1.4rem; /* 设置标题字体大小 */
     margin: 0; /* 清除默认边距 */
     padding-bottom: 10px; /* 添加底部间距 */
     border-bottom: 2px solid #66FCF1; /* 底部边框 */
 }
+
 .modal-content p {
     color: #000000; /* 设置段落文本为黑色 */
-    font-size: 1rem; /* 设置段落文本大小 */
+    font-size: 0.9rem; /* 设置段落文本大小 */
     margin: 10px 0; /* 添加上下边距 */
 }
 
