@@ -214,3 +214,8 @@ function performSearch() {
         window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(searchInput), '_blank');
     }
 }
+
+// 确保页面加载时始终从顶部开始显示
+window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+};
