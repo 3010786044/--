@@ -105,6 +105,22 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         "retina_detect": true
     });
+
+    // 添加搜索按钮点击事件
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', performSearch);
+    }
+    
+    // 添加回车键搜索功能
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
 });
 
 // 加载模态框
