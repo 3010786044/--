@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI问答 (修复版)</title>
+    <title>AI问答 (最终版)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,11 +17,6 @@
             color: #333;
         }
         .model-selector {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .api-selector {
-            margin-top: 10px;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -87,25 +82,38 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 12px;
-            display: block;
+            display: none;
+        }
+        .config-panel {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .toggle-debug {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <h1>AI问答 (修复版)</h1>
-    <div class="model-selector">
-        <select id="model-select" class="ai-chat-select">
-            <option value="aliyun">阿里云通义千问</option>
-            <option value="kimi">Kimi</option>
-            <option value="deepseek">DeepSeek</option>
-        </select>
+    <h1>AI问答 (最终版)</h1>
+    
+    <div class="config-panel">
+        <div class="model-selector">
+            <label for="model-select">选择AI模型：</label>
+            <select id="model-select" class="ai-chat-select">
+                <option value="aliyun">阿里云通义千问</option>
+                <option value="kimi">Kimi</option>
+                <option value="deepseek">DeepSeek</option>
+            </select>
+        </div>
+        <div class="toggle-debug" onclick="toggleDebug()">显示/隐藏调试信息</div>
     </div>
-    <div class="api-selector">
-        <select id="api-select" class="ai-chat-select">
-            <option value="relative">相对路径 (/api/chat)</option>
-            <option value="direct" selected>直接访问 (http://8.137.115.81:5000/api/chat)</option>
-        </select>
-    </div>
+    
     <div class="ai-chat-container" id="chat-container"></div>
     <div class="ai-chat-input-container" id="input-container">
         <input type="text" class="ai-chat-input" id="user-input" placeholder="请输入您的问题...">        
@@ -121,33 +129,33 @@
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const modelSelect = document.getElementById('model-select');
-        const apiSelect = document.getElementById('api-select');
         const debugLog = document.getElementById('debug-log');
         const debugInfo = document.getElementById('debug-info');
         let isProcessing = false;
         
-        // 启用调试模式
-        const showDebug = true;
+        // 默认隐藏调试信息
+        let showDebug = false;
         
-        // 获取当前选择的API地址
-        function getApiUrl() {
-            if (apiSelect.value === 'relative') {
-                return '/api/chat';
-            } else {
-                return 'http://8.137.115.81:5000/api/chat';
-            }
-        }
+        // API URL - 相对路径访问
+        const API_URL = '/api/chat';
             
+        // 记录日志
         function log(message) {
-            console.log(message);
-            if (showDebug) {
-                debugInfo.style.display = 'block';
-                debugLog.textContent += new Date().toISOString() + ': ' + message + '\n';
-                // 滚动到底部
-                debugLog.scrollTop = debugLog.scrollHeight;
-            }
+            const timestamp = new Date().toISOString();
+            console.log(`${timestamp}: ${message}`);
+            
+            debugLog.textContent += `${timestamp}: ${message}\n`;
+            // 滚动到底部
+            debugLog.scrollTop = debugLog.scrollHeight;
         }
 
+        // 切换调试信息显示状态
+        function toggleDebug() {
+            showDebug = !showDebug;
+            debugInfo.style.display = showDebug ? 'block' : 'none';
+        }
+
+        // 添加消息到聊天窗口
         function addMessage(role, content) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `ai-chat-message ai-chat-${role}-message`;
@@ -156,6 +164,7 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
+        // 添加加载指示器
         function addLoadingIndicator() {
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
@@ -165,6 +174,7 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
+        // 移除加载指示器
         function removeLoadingIndicator() {
             const loadingDiv = document.getElementById('loading-indicator');
             if (loadingDiv) {
@@ -172,6 +182,7 @@
             }
         }
 
+        // 发送消息到API
         async function sendMessage() {
             const question = userInput.value.trim();
             if (!question || isProcessing) return;
@@ -185,11 +196,10 @@
             userInput.value = '';
             
             addLoadingIndicator();
-            
-            const apiUrl = getApiUrl();
 
             try {
                 log('正在发送请求...');
+                const apiUrl = API_URL;
                 log(`API地址: ${apiUrl}`);
                 
                 const requestData = {
@@ -201,6 +211,7 @@
                 log(`请求数据: ${jsonData}`);
                 
                 log('发送请求中...');
+                const startTime = Date.now();
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
@@ -209,8 +220,9 @@
                     },
                     body: jsonData
                 });
+                const endTime = Date.now();
                 
-                log(`收到响应，状态码: ${response.status}`);
+                log(`收到响应，状态码: ${response.status}，耗时: ${endTime - startTime}ms`);
                 
                 removeLoadingIndicator();
                 
@@ -239,7 +251,7 @@
                     log(`API返回错误: ${data.error}`);
                     addMessage('ai', `错误：${data.error}`);
                 } else if (data.answer) {
-                    log(`获取到答案: ${data.answer}`);
+                    log(`获取到答案: ${data.answer.substring(0, 100)}...`);
                     addMessage('ai', data.answer);
                 } else {
                     log('API响应中没有answer字段');
@@ -248,7 +260,7 @@
                 }
             } catch (error) {
                 log(`请求出错: ${error.message}`);
-                log(`错误堆栈: ${error.stack}`);
+                log(`错误类型: ${error.name}`);
                 removeLoadingIndicator();
                 addMessage('ai', `抱歉，服务器连接失败。具体错误：${error.message}。请检查网络连接并联系管理员。`);
             } finally {
@@ -268,36 +280,26 @@
         // 页面加载时添加一条欢迎消息
         window.addEventListener('load', function() {
             addMessage('ai', '你好！我是AI助手，有什么可以帮助你的吗？');
-            log('页面加载完成，默认API地址：' + getApiUrl());
-            log('调试模式已启用，所有日志将显示在此区域');
+            log('页面加载完成，API路径：' + API_URL);
+            log('调试信息已默认隐藏，点击"显示/隐藏调试信息"按钮可切换显示状态');
             
-            // API路径选择器变化时记录日志
-            apiSelect.addEventListener('change', function() {
-                log('API地址已更改为: ' + getApiUrl());
-            });
-            
-            // 测试能否访问API健康检查
-            fetch('http://8.137.115.81:5000/health')
-                .then(response => {
-                    log(`健康检查响应状态: ${response.status}`);
-                    return response.text();
-                })
-                .then(text => {
-                    log(`健康检查响应: ${text}`);
-                })
-                .catch(error => {
-                    log(`健康检查失败: ${error.message}`);
-                });
+            // 添加健康检查
+            checkApiHealth();
         });
         
-        // 随时可以点击调试区域隐藏/显示
-        debugInfo.addEventListener('click', function() {
-            if (debugLog.style.display === 'none') {
-                debugLog.style.display = 'block';
-            } else {
-                debugLog.style.display = 'none';
+        // API健康检查
+        async function checkApiHealth() {
+            try {
+                log('执行API健康检查...');
+                const response = await fetch(`${API_URL}?health=check`, {
+                    method: 'GET'
+                });
+                
+                log(`API健康检查结果：HTTP ${response.status} ${response.statusText}`);
+            } catch (error) {
+                log(`API健康检查失败: ${error.message}`);
             }
-        });
+        }
     </script>
 </body>
-</html>
+</html> 

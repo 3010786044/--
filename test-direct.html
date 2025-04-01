@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>API测试</title>
+</head>
+<body>
+    <h1>API直接测试</h1>
+    <button id="testButton">测试API</button>
+    <pre id="result" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px;"></pre>
+
+    <script>
+        document.getElementById('testButton').addEventListener('click', async function() {
+            const resultEl = document.getElementById('result');
+            resultEl.textContent = '正在请求...';
+            
+            try {
+                // 直接使用IP地址和端口
+                const response = await fetch('http://8.137.115.81:5000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question: '你好',
+                        model: 'aliyun'
+                    })
+                });
+                
+                resultEl.textContent = '状态码: ' + response.status + '\n';
+                
+                const data = await response.text();
+                resultEl.textContent += '响应数据: ' + data;
+            } catch (error) {
+                resultEl.textContent = '错误: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html> 

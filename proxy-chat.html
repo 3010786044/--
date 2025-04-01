@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI问答 (修复版)</title>
+    <title>AI问答 (PHP代理版)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,11 +17,6 @@
             color: #333;
         }
         .model-selector {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .api-selector {
-            margin-top: 10px;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -92,18 +87,11 @@
     </style>
 </head>
 <body>
-    <h1>AI问答 (修复版)</h1>
+    <h1>AI问答 (PHP代理版)</h1>
     <div class="model-selector">
         <select id="model-select" class="ai-chat-select">
             <option value="aliyun">阿里云通义千问</option>
             <option value="kimi">Kimi</option>
-            <option value="deepseek">DeepSeek</option>
-        </select>
-    </div>
-    <div class="api-selector">
-        <select id="api-select" class="ai-chat-select">
-            <option value="relative">相对路径 (/api/chat)</option>
-            <option value="direct" selected>直接访问 (http://8.137.115.81:5000/api/chat)</option>
         </select>
     </div>
     <div class="ai-chat-container" id="chat-container"></div>
@@ -121,7 +109,6 @@
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const modelSelect = document.getElementById('model-select');
-        const apiSelect = document.getElementById('api-select');
         const debugLog = document.getElementById('debug-log');
         const debugInfo = document.getElementById('debug-info');
         let isProcessing = false;
@@ -129,14 +116,8 @@
         // 启用调试模式
         const showDebug = true;
         
-        // 获取当前选择的API地址
-        function getApiUrl() {
-            if (apiSelect.value === 'relative') {
-                return '/api/chat';
-            } else {
-                return 'http://8.137.115.81:5000/api/chat';
-            }
-        }
+        // PHP代理URL
+        const PROXY_URL = '/proxy.php';
             
         function log(message) {
             console.log(message);
@@ -185,12 +166,10 @@
             userInput.value = '';
             
             addLoadingIndicator();
-            
-            const apiUrl = getApiUrl();
 
             try {
                 log('正在发送请求...');
-                log(`API地址: ${apiUrl}`);
+                log(`代理地址: ${PROXY_URL}`);
                 
                 const requestData = {
                     question: question,
@@ -201,7 +180,7 @@
                 log(`请求数据: ${jsonData}`);
                 
                 log('发送请求中...');
-                const response = await fetch(apiUrl, {
+                const response = await fetch(PROXY_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -268,26 +247,8 @@
         // 页面加载时添加一条欢迎消息
         window.addEventListener('load', function() {
             addMessage('ai', '你好！我是AI助手，有什么可以帮助你的吗？');
-            log('页面加载完成，默认API地址：' + getApiUrl());
+            log('页面加载完成，使用PHP代理：' + PROXY_URL);
             log('调试模式已启用，所有日志将显示在此区域');
-            
-            // API路径选择器变化时记录日志
-            apiSelect.addEventListener('change', function() {
-                log('API地址已更改为: ' + getApiUrl());
-            });
-            
-            // 测试能否访问API健康检查
-            fetch('http://8.137.115.81:5000/health')
-                .then(response => {
-                    log(`健康检查响应状态: ${response.status}`);
-                    return response.text();
-                })
-                .then(text => {
-                    log(`健康检查响应: ${text}`);
-                })
-                .catch(error => {
-                    log(`健康检查失败: ${error.message}`);
-                });
         });
         
         // 随时可以点击调试区域隐藏/显示
@@ -300,4 +261,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
