@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小明玩AI - 聊天</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .message-container {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: a10px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        .system-message {
+            background-color: #fff3cd;
+            margin: 10px auto;
+            text-align: center;
+            font-style: italic;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .input-container {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .input-container select {
+            width: 100px;
+            margin-right: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-container input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-container button {
+            padding: 8px 16px;
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background-color: #1565c0;
+        }
+        .input-container button:disabled {
+            background-color: #90caf9;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .status {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>小明玩AI - 聊天</h1>
+    </div>
+    <div class="chat-container">
+        <div class="message-container" id="messageContainer">
+            <div class="system-message">欢迎使用AI聊天服务！请选择模型并开始对话。</div>
+        </div>
+        <div class="input-container">
+            <select id="modelSelect">
+                <option value="aliyun">阿里云</option>
+                <option value="kimi">Kimi</option>
+                <option value="deepseek">DeepSeek</option>
+            </select>
+            <input type="text" id="questionInput" placeholder="请输入您的问题..." />
+            <button id="sendButton">发送</button>
+        </div>
+        <div class="error" id="errorMessage"></div>
+        <div class="status" id="statusMessage">准备就绪，可以开始聊天</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageContainer = document.getElementById('messageContainer');
+            const questionInput = document.getElementById('questionInput');
+            const modelSelect = document.getElementById('modelSelect');
+            const sendButton = document.getElementById('sendButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // 检查API服务是否在线
+            fetch('/api/chat', {
+                method: 'OPTIONS'
+            })
+            .then(response => {
+                if (response.ok) {
+                    statusMessage.textContent = "API服务在线，可以开始聊天";
+                } else {
+                    statusMessage.textContent = "API服务可能不在线，请谨慎使用";
+                }
+            })
+            .catch(error => {
+                statusMessage.textContent = "无法连接到API服务，请联系管理员";
+            });
+
+            // 发送消息函数
+            function sendMessage() {
+                const question = questionInput.value.trim();
+                const model = modelSelect.value;
+                
+                if (!question) return;
+                
+                // 添加用户消息到聊天窗口
+                addMessage(question, 'user');
+                
+                // 清空输入框
+                questionInput.value = '';
+                
+                // 添加思考中的系统消息
+                const thinkingElement = document.createElement('div');
+                thinkingElement.classList.add('system-message');
+                thinkingElement.textContent = "AI思考中...";
+                thinkingElement.id = "thinking-message";
+                messageContainer.appendChild(thinkingElement);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+                
+                // 调用API
+                errorMessage.textContent = '';
+                statusMessage.textContent = `正在使用${getModelName(model)}模型处理请求...`;
+                sendButton.disabled = true;
+                sendButton.textContent = '发送中...';
+                
+                fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        model: model
+                    })
+                })
+                .then(response => {
+                    // 记录HTTP状态码
+                    const statusCode = response.status;
+                    statusMessage.textContent = `服务器返回状态码: ${statusCode}`;
+                    
+                    return response.json().then(data => {
+                        return { status: statusCode, data: data };
+                    });
+                })
+                .then(result => {
+                    // 移除思考中的消息
+                    const thinkingMsg = document.getElementById("thinking-message");
+                    if (thinkingMsg) {
+                        thinkingMsg.remove();
+                    }
+                    
+                    if (result.status !== 200) {
+                        // 显示HTTP错误
+                        errorMessage.textContent = `服务器返回状态码 ${result.status}，请联系管理员检查服务器日志。`;
+                        if (result.data && result.data.error) {
+                            addSystemMessage(`错误: ${result.data.error}`);
+                        }
+                    } else if (result.data.error) {
+                        // 显示API错误
+                        errorMessage.textContent = `错误: ${result.data.error}`;
+                        addSystemMessage(`服务器错误: ${result.data.error}`);
+                    } else if (result.data.answer) {
+                        // 显示回答
+                        addMessage(result.data.answer, 'ai');
+                        statusMessage.textContent = `请求成功完成，使用了${getModelName(model)}模型`;
+                    } else {
+                        // 未知回答格式
+                        errorMessage.textContent = '服务器返回了不可识别的响应格式';
+                        addSystemMessage("回答格式错误，请重试或联系管理员");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // 移除思考中的消息
+                    const thinkingMsg = document.getElementById("thinking-message");
+                    if (thinkingMsg) {
+                        thinkingMsg.remove();
+                    }
+                    
+                    errorMessage.textContent = '连接服务器失败，请检查网络连接或联系管理员';
+                    addSystemMessage("连接失败，请稍后再试");
+                    statusMessage.textContent = "请求失败: " + error.message;
+                })
+                .finally(() => {
+                    sendButton.disabled = false;
+                    sendButton.textContent = '发送';
+                });
+            }
+
+            // 获取模型的中文名称
+            function getModelName(modelCode) {
+                switch(modelCode) {
+                    case 'aliyun': return '阿里云';
+                    case 'kimi': return 'Kimi';
+                    case 'deepseek': return 'DeepSeek';
+                    default: return modelCode;
+                }
+            }
+
+            // 添加消息到聊天窗口
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
+                messageElement.textContent = text;
+                messageContainer.appendChild(messageElement);
+                
+                // 滚动到底部
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+            
+            // 添加系统消息
+            function addSystemMessage(text) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('system-message');
+                messageElement.textContent = text;
+                messageContainer.appendChild(messageElement);
+                
+                // 滚动到底部
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+
+            // 绑定发送按钮点击事件
+            sendButton.addEventListener('click', sendMessage);
+            
+            // 绑定回车键发送
+            questionInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
