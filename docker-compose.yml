@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  ai-chat:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - ALIYUN_API_KEY=${ALIYUN_API_KEY}
+      - KIMI_API_KEY=${KIMI_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    restart: always 

@@ -357,3 +357,28 @@ footer {
     transform: translateY(-2px);
 }
 
+.model-selector {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.ai-chat-select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #66FCF1;
+    border-radius: 8px;
+    background-color: rgba(31, 40, 51, 0.8);
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+}
+
+.ai-chat-select:hover {
+    border-color: #4CAF50;
+}
+
+.ai-chat-select option {
+    background-color: #1F2833;
+    color: #ffffff;
+}
+
