@@ -105,6 +105,22 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         "retina_detect": true
     });
+
+    // 添加搜索按钮点击事件
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', performSearch);
+    }
+    
+    // 添加回车键搜索功能
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
 });
 
 // 加载模态框
@@ -214,3 +230,8 @@ function performSearch() {
         window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(searchInput), '_blank');
     }
 }
+
+// 确保页面加载时始终从顶部开始显示
+window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+};
