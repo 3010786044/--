@@ -161,7 +161,14 @@
                 sendButton.disabled = true;
                 sendButton.textContent = '发送中...';
 
-                const apiKey = "YOUR_DASHSCOPE_API_KEY"; // 替换为你的阿里云百炼API Key
+                // 从环境变量或用户配置中获取API Key
+                // 注意：在实际生产环境中，不要在前端硬编码API Key
+                const apiKey = getApiKey();
+                if (!apiKey) {
+                    handleError('未配置API Key，请联系管理员');
+                    return;
+                }
+
                 const messages = [
                     {'role': 'system', 'content': 'You are a helpful assistant.'},
                     {'role': 'user', 'content': question}
@@ -180,8 +187,9 @@
                     })
                 })
                 .then(response => {
-                    const statusCode = response.status;
-                    statusMessage.textContent = `服务器返回状态码: ${statusCode}`;
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误，状态码: ${response.status}`);
+                    }
                     return response.json();
                 })
                 .then(result => {
@@ -191,34 +199,47 @@
                         thinkingMsg.remove();
                     }
                     
+                    // 检查API返回的状态码
                     if (result.status_code !== 200) {
-                        // 显示HTTP错误
-                        errorMessage.textContent = `服务器返回状态码 ${result.status_code}，请联系管理员检查服务器日志。`;
-                        if (result.code) {
-                            addSystemMessage(`错误码: ${result.code}, 错误信息: ${result.message}`);
-                        }
-                    } else {
-                        // 显示回答
-                        addMessage(result.output.choices[0].message.content, 'ai');
-                        statusMessage.textContent = `请求成功完成，使用了${model}模型`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // 移除思考中的消息
-                    const thinkingMsg = document.getElementById("thinking-message");
-                    if (thinkingMsg) {
-                        thinkingMsg.remove();
+                        throw new Error(`API错误: ${result.code || '未知错误'} - ${result.message || '无详细信息'}`);
                     }
                     
-                    errorMessage.textContent = '连接服务器失败，请检查网络连接或联系管理员';
-                    addSystemMessage("连接失败，请稍后再试");
-                    statusMessage.textContent = "请求失败: " + error.message;
+                    // 显示回答
+                    addMessage(result.output.choices[0].message.content, 'ai');
+                    statusMessage.textContent = `请求成功完成，使用了${model}模型`;
+                })
+                .catch(error => {
+                    console.error('请求失败:', error);
+                    handleError(`请求失败: ${error.message}`);
                 })
                 .finally(() => {
                     sendButton.disabled = false;
                     sendButton.textContent = '发送';
                 });
+            }
+
+            // 错误处理函数
+            function handleError(message) {
+                // 移除思考中的消息
+                const thinkingMsg = document.getElementById("thinking-message");
+                if (thinkingMsg) {
+                    thinkingMsg.remove();
+                }
+                
+                errorMessage.textContent = message;
+                addSystemMessage("发生错误，请重试");
+                statusMessage.textContent = "请求失败";
+            }
+
+            // 获取API Key的函数
+            function getApiKey() {
+                // 优先从localStorage获取
+                const storedKey = localStorage.getItem('dashscopeApiKey');
+                if (storedKey) return storedKey;
+                
+                // 如果没有存储的Key，则使用默认的(在实际应用中应该避免这种情况)
+                console.warn('未找到存储的API Key，使用默认的示例Key');
+                return "YOUR_DASHSCOPE_API_KEY";
             }
 
             // 获取模型的中文名称
@@ -264,4 +285,4 @@
         });
     </script>
 </body>
-</html> 
+</html>    
