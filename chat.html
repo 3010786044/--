@@ -31,7 +31,7 @@
             border-radius: 4px;
         }
         .message {
-            margin-bottom: a10px;
+            margin-bottom: 10px;
             padding: 8px 12px;
             border-radius: 18px;
             max-width: 80%;
@@ -112,9 +112,7 @@
         </div>
         <div class="input-container">
             <select id="modelSelect">
-                <option value="aliyun">阿里云</option>
-                <option value="kimi">Kimi</option>
-                <option value="deepseek">DeepSeek</option>
+                <option value="qwen-plus">阿里云Qwen-Plus</option>
             </select>
             <input type="text" id="questionInput" placeholder="请输入您的问题..." />
             <button id="sendButton">发送</button>
@@ -133,19 +131,8 @@
             const statusMessage = document.getElementById('statusMessage');
 
             // 检查API服务是否在线
-            fetch('/api/chat', {
-                method: 'OPTIONS'
-            })
-            .then(response => {
-                if (response.ok) {
-                    statusMessage.textContent = "API服务在线，可以开始聊天";
-                } else {
-                    statusMessage.textContent = "API服务可能不在线，请谨慎使用";
-                }
-            })
-            .catch(error => {
-                statusMessage.textContent = "无法连接到API服务，请联系管理员";
-            });
+            // 这里可以根据实际情况修改为检查阿里云接口的可用性
+            statusMessage.textContent = "API服务在线，可以开始聊天";
 
             // 发送消息函数
             function sendMessage() {
@@ -168,30 +155,34 @@
                 messageContainer.appendChild(thinkingElement);
                 messageContainer.scrollTop = messageContainer.scrollHeight;
                 
-                // 调用API
+                // 调用阿里云百炼接口
                 errorMessage.textContent = '';
-                statusMessage.textContent = `正在使用${getModelName(model)}模型处理请求...`;
+                statusMessage.textContent = `正在使用${model}模型处理请求...`;
                 sendButton.disabled = true;
                 sendButton.textContent = '发送中...';
-                
-                fetch('/api/chat', {
+
+                const apiKey = "YOUR_DASHSCOPE_API_KEY"; // 替换为你的阿里云百炼API Key
+                const messages = [
+                    {'role': 'system', 'content': 'You are a helpful assistant.'},
+                    {'role': 'user', 'content': question}
+                ];
+
+                fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        question: question,
-                        model: model
+                        model: model,
+                        messages: messages,
+                        result_format: "message"
                     })
                 })
                 .then(response => {
-                    // 记录HTTP状态码
                     const statusCode = response.status;
                     statusMessage.textContent = `服务器返回状态码: ${statusCode}`;
-                    
-                    return response.json().then(data => {
-                        return { status: statusCode, data: data };
-                    });
+                    return response.json();
                 })
                 .then(result => {
                     // 移除思考中的消息
@@ -200,24 +191,16 @@
                         thinkingMsg.remove();
                     }
                     
-                    if (result.status !== 200) {
+                    if (result.status_code !== 200) {
                         // 显示HTTP错误
-                        errorMessage.textContent = `服务器返回状态码 ${result.status}，请联系管理员检查服务器日志。`;
-                        if (result.data && result.data.error) {
-                            addSystemMessage(`错误: ${result.data.error}`);
+                        errorMessage.textContent = `服务器返回状态码 ${result.status_code}，请联系管理员检查服务器日志。`;
+                        if (result.code) {
+                            addSystemMessage(`错误码: ${result.code}, 错误信息: ${result.message}`);
                         }
-                    } else if (result.data.error) {
-                        // 显示API错误
-                        errorMessage.textContent = `错误: ${result.data.error}`;
-                        addSystemMessage(`服务器错误: ${result.data.error}`);
-                    } else if (result.data.answer) {
-                        // 显示回答
-                        addMessage(result.data.answer, 'ai');
-                        statusMessage.textContent = `请求成功完成，使用了${getModelName(model)}模型`;
                     } else {
-                        // 未知回答格式
-                        errorMessage.textContent = '服务器返回了不可识别的响应格式';
-                        addSystemMessage("回答格式错误，请重试或联系管理员");
+                        // 显示回答
+                        addMessage(result.output.choices[0].message.content, 'ai');
+                        statusMessage.textContent = `请求成功完成，使用了${model}模型`;
                     }
                 })
                 .catch(error => {
@@ -241,9 +224,7 @@
             // 获取模型的中文名称
             function getModelName(modelCode) {
                 switch(modelCode) {
-                    case 'aliyun': return '阿里云';
-                    case 'kimi': return 'Kimi';
-                    case 'deepseek': return 'DeepSeek';
+                    case 'qwen-plus': return '阿里云Qwen-Plus';
                     default: return modelCode;
                 }
             }
@@ -259,7 +240,7 @@
                 // 滚动到底部
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
-            
+
             // 添加系统消息
             function addSystemMessage(text) {
                 const messageElement = document.createElement('div');
